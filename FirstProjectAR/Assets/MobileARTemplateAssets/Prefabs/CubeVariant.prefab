@@ -16,6 +16,14 @@ PrefabInstance:
       propertyPath: m_AffordanceThemeDatum.m_Variable
       value: 
       objectReference: {fileID: 11400000, guid: 1e7f6f70c50e3864789127de6b014097, type: 2}
+    - target: {fileID: 794539401408094, guid: ebd7292e888c84f05924605e51048072, type: 3}
+      propertyPath: m_ValueUpdated.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 794539401408094, guid: ebd7292e888c84f05924605e51048072, type: 3}
+      propertyPath: m_ValueUpdated.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 613292779795284151, guid: ebd7292e888c84f05924605e51048072, type: 3}
       propertyPath: m_Name
       value: CubeVariant
@@ -68,6 +76,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7024931360595809623, guid: ebd7292e888c84f05924605e51048072, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7357653953804275573, guid: ebd7292e888c84f05924605e51048072, type: 3}
       propertyPath: m_MinScale
       value: 0.3
@@ -75,5 +87,28 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 613292779795284151, guid: ebd7292e888c84f05924605e51048072, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1007867770561964156}
   m_SourcePrefab: {fileID: 100100000, guid: ebd7292e888c84f05924605e51048072, type: 3}
+--- !u!1 &8986328500875594450 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 613292779795284151, guid: ebd7292e888c84f05924605e51048072, type: 3}
+  m_PrefabInstance: {fileID: 8374162720834587237}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1007867770561964156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8986328500875594450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97e1373e122331046a4eb4c612f7471e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Runtime.Object::DistanceCube
+  _defaultMaterial: {fileID: 2100000, guid: 882fdafcdb161d148b9c2a5ad61f2484, type: 2}
+  _nearbyMaterial: {fileID: 2100000, guid: 38015dceb1be1e84498c7cc28dddd0bd, type: 2}
+  _ColorSwapThreshold: 1.5
