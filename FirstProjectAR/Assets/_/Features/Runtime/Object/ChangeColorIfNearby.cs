@@ -1,9 +1,10 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 public class ChangeColorIfNearby : MonoBehaviour
 {
-    #region Api Unity
+    #region Unity API
 
     private void Awake()
     {
@@ -14,51 +15,86 @@ public class ChangeColorIfNearby : MonoBehaviour
     private void Start()
     {
         _camera = Camera.main;
-        _meshRenderer.material = _defaultMaterial;
+        _meshRenderer.sharedMaterial = _defaultMaterial;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-        // Vector3 direction = _textMeshPro.transform.position - _camera.transform.position;
-        // Quaternion rotation = Quaternion.LookRotation(direction);
+        HandleDistance();
+        HandleTextRotation();
+        HandleVisuals();
+    }
+
+    #endregion
+
+    #region Core Logic
+
+    private void HandleDistance()
+    {
+        _distance = Vector3.Distance(_camera.transform.position, transform.position);
+
+        float t = Mathf.InverseLerp(0f, _distanceMaxForScale, _distance);
+        t = Mathf.Pow(t, 2f);
+        _textMeshPro.fontSize = Mathf.Lerp(_maxFontSize, _minFontSize, t * _speedSizeChanged);
+        Debug.Log(_textMeshPro.fontSize);
+
+        _textMeshPro.text = _distance.ToString("0.00");
+    }
+
+    private void HandleTextRotation()
+    {
+        Vector3 direction = _textMeshPro.transform.position - _camera.transform.position;
+        direction = Vector3.ProjectOnPlane(direction,Vector3.up);
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        // Quaternion rotation = Quaternion.Lerp(_textMeshPro.transform.rotation, targetRotation, Time.deltaTime * _lerp);
+        _rotation =
+            Quaternion.RotateTowards(_textMeshPro.transform.rotation, 
+                targetRotation, _rotationSpeed * Time.deltaTime);
         
-        _direction = _camera.transform.position - transform.position;
-        float distance = _direction.magnitude;
-        
-        float t = Mathf.InverseLerp(0f, _ColorSwapThreshold, distance);
-        
-        _textMeshPro.fontSize = Mathf.Lerp(_maxFontSize, _minFontSize, t);
-        
-        _textMeshPro.text = distance.ToString("0.00");
-        
-        _textMeshPro.transform.forward = _camera.transform.forward;
-        
-        if (distance <= _ColorSwapThreshold)
+    }
+
+    private void HandleVisuals()
+    {
+        if (_distance <= _colorSwapThreshold)
         {
-            _meshRenderer.material = _nearbyMaterial;
+            if (_meshRenderer.sharedMaterial != _nearbyMaterial)
+                _meshRenderer.sharedMaterial = _nearbyMaterial;
+            _textMeshPro.transform.rotation = _rotation;
         }
         else
         {
-            _meshRenderer.material = _defaultMaterial;
+            if (_meshRenderer.sharedMaterial != _defaultMaterial)
+                _meshRenderer.sharedMaterial = _defaultMaterial;
+            _textMeshPro.transform.rotation *= Quaternion.Euler(0f, _rotationSpeed*Time.deltaTime,0f );
         }
     }
 
     #endregion
 
-    #region Private
+    #region Private Fields
 
     private Camera _camera;
-    private Vector3 _direction;
     private MeshRenderer _meshRenderer;
+    private TextMeshPro _textMeshPro;
+    private float _distance;
+    private Quaternion _rotation;
 
+    [Header("Materials")]
     [SerializeField] private Material _defaultMaterial;
     [SerializeField] private Material _nearbyMaterial;
 
-    [SerializeField] private float _ColorSwapThreshold = 1.5f;
-    [SerializeField] private TextMeshPro _textMeshPro;
+    [Header("Distance Settings")]
+    [SerializeField] private float _colorSwapThreshold = 1.5f;
+    [SerializeField] private float _distanceMaxForScale = 5f;
 
+    [Header("Text Settings")]
     [SerializeField] private float _minFontSize = 0.1f;
     [SerializeField] private float _maxFontSize = 1f;
-
+    [SerializeField] private float _speedSizeChanged = 10f;
+    [SerializeField] private float _lerp = 0.2f;
+    [SerializeField] private float _rotationSpeed = 60f;
+    
+    
+    
     #endregion
 }

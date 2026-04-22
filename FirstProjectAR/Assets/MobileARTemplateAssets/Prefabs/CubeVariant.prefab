@@ -26,7 +26,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7584354572880660688}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.001}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1.771, y: 0.508}
+  m_AnchoredPosition: {x: 0, y: 0.3}
   m_SizeDelta: {x: 5, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &6749749486478250440
@@ -106,7 +106,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Sample text
+  m_text: 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -172,7 +172,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0.5744295, y: 0.4943353, z: 4.1333117, w: 0.20065194}
+  m_margin: {x: 2.208243, y: 0.4943353, z: 2.1627772, w: 0.6057556}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0
@@ -271,36 +271,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3900644259840735266, guid: ebd7292e888c84f05924605e51048072, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3492253313298695128}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 613292779795284151, guid: ebd7292e888c84f05924605e51048072, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1007867770561964156}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ebd7292e888c84f05924605e51048072, type: 3}
 --- !u!4 &4762239851910345287 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3900644259840735266, guid: ebd7292e888c84f05924605e51048072, type: 3}
   m_PrefabInstance: {fileID: 8374162720834587237}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &8986328500875594450 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 613292779795284151, guid: ebd7292e888c84f05924605e51048072, type: 3}
-  m_PrefabInstance: {fileID: 8374162720834587237}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1007867770561964156
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8986328500875594450}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97e1373e122331046a4eb4c612f7471e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Runtime.Object::DistanceCube
-  _defaultMaterial: {fileID: 2100000, guid: 882fdafcdb161d148b9c2a5ad61f2484, type: 2}
-  _nearbyMaterial: {fileID: 2100000, guid: 38015dceb1be1e84498c7cc28dddd0bd, type: 2}
-  _ColorSwapThreshold: 1.5
-  _textMeshPro: {fileID: 0}
-  _minFontSize: 0.1
-  _maxFontSize: 2
