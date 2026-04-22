@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using PrimeTween;
 using TMPro;
 using UnityEngine;
 
+[RequireComponent(typeof(LineRenderer))]
 public class ChangeColorIfNearby : MonoBehaviour
 {
     #region Unity API
@@ -10,12 +12,25 @@ public class ChangeColorIfNearby : MonoBehaviour
     {
         _meshRenderer = GetComponentInChildren<MeshRenderer>();
         _textMeshPro = GetComponentInChildren<TextMeshPro>();
+        _lineRenderer = GetComponent<LineRenderer>();
     }
 
     private void Start()
     {
         _camera = Camera.main;
         _meshRenderer.sharedMaterial = _defaultMaterial;
+        
+        _lineRenderer.positionCount = 2;
+        _lineRenderer.startWidth = 0.05f;
+        _lineRenderer.endWidth = 0.05f;
+
+        _allPoints.Add(this);
+
+        if (_allPoints.Count == 4)
+        {
+            DrawQuadrilateral();
+            CalculateArea();
+        }
     }
 
     private void Update()
@@ -23,11 +38,22 @@ public class ChangeColorIfNearby : MonoBehaviour
         HandleDistance();
         HandleTextRotation();
         HandleVisuals();
+        HandleMeasureLine();
     }
 
     #endregion
+    
+    
+    #region Utils
 
-    #region Core Logic
+    public void SetTarget(Transform target)
+    {
+        _targetObject = target;
+    }
+    
+    #endregion
+
+    #region Main Methods
 
     private void HandleDistance()
     {
@@ -36,7 +62,6 @@ public class ChangeColorIfNearby : MonoBehaviour
         float t = Mathf.InverseLerp(0f, _distanceMaxForScale, _distance);
         t = Mathf.Pow(t, 2f);
         _textMeshPro.fontSize = Mathf.Lerp(_maxFontSize, _minFontSize, t * _speedSizeChanged);
-        Debug.Log(_textMeshPro.fontSize);
 
         _textMeshPro.text = _distance.ToString("0.00");
     }
@@ -60,13 +85,97 @@ public class ChangeColorIfNearby : MonoBehaviour
             if (_meshRenderer.sharedMaterial != _nearbyMaterial)
                 _meshRenderer.sharedMaterial = _nearbyMaterial;
             _textMeshPro.transform.rotation = _rotation;
+            Tween.Scale(transform, 1.5f, 1);
         }
         else
         {
             if (_meshRenderer.sharedMaterial != _defaultMaterial)
                 _meshRenderer.sharedMaterial = _defaultMaterial;
             _textMeshPro.transform.rotation *= Quaternion.Euler(0f, _rotationSpeed*Time.deltaTime,0f );
+            Tween.Scale(transform, 1f, 1f, Ease.OutCubic);
         }
+    }
+
+    private void HandleMeasureLine()
+    {
+        _allPoints.RemoveAll(item => item == null);
+        
+        int myIndex = _allPoints.IndexOf(this);
+        if (myIndex == 0)
+        {
+            _lineRenderer.enabled = false;
+            _textMeshPro.enabled = false;
+            return;
+        }
+        
+        _lineRenderer.enabled = true;
+        _textMeshPro.enabled = true;
+        
+        _lineRenderer.positionCount = 2;
+        _lineRenderer.SetPosition(0, transform.position);
+        _lineRenderer.SetPosition(1,_allPoints[myIndex - 1].transform.position);
+
+        if (_allPoints.Count == 4 && myIndex == 3)
+        {
+            _lineRenderer.positionCount = 3;
+            _lineRenderer.SetPosition(2, _allPoints[0].transform.position);
+            
+            CalculateArea();
+        }
+
+        else
+        {
+            float d =Vector3.Distance(transform.position, _allPoints[myIndex - 1 ].transform.position);
+            _textMeshPro.text = $"{d:F2}m";
+            
+            _textMeshPro.transform.position = (transform.position 
+                                               + _allPoints[myIndex - 1].transform.position)
+                                                / 2f + Vector3.up * 0.05f;
+        }
+
+        // float distBetween = Vector3.Distance(transform.position, _targetObject.position);
+        //
+        // Vector3 middlePoint = (transform.position + _targetObject.position) / 2f;
+        //
+        // _textMeshPro.transform.position = middlePoint + Vector3.up * 0.05f;
+        // _textMeshPro.text = $"{distBetween:F2} m";
+    }
+
+    private void DrawQuadrilateral()
+    {
+        _lineRenderer.positionCount = 5;
+        _lineRenderer.loop = true;
+
+        for (int i = 0; i < 4; i++)
+        {
+            _lineRenderer.SetPosition(i, _allPoints[i].transform.position);
+        }
+        
+        _lineRenderer.SetPosition(4, _allPoints[0].transform.position);
+    }
+
+    private void CalculateArea()
+    {
+        Vector3 a = _allPoints[0].transform.position;
+        Vector3 b = _allPoints[1].transform.position;
+        Vector3 c = _allPoints[2].transform.position;
+        Vector3 d = _allPoints[3].transform.position;
+        
+        float area1 = Vector3.Cross(b - a, c - a).magnitude * 0.5f;
+        float area2 = Vector3.Cross(c - a, d -a).magnitude * 0.5f;
+        float totalArea = area1 + area2;
+
+        _textMeshPro.enabled = true;
+
+        Vector3 center = (a + b + c + d) / 4f;
+        _textMeshPro.transform.position = center +  Vector3.up * 0.1f;
+
+        _textMeshPro.text = $"Aire: {totalArea:F2} m²";
+    }
+
+    private void OnDestroy()
+    {
+        _allPoints.Remove(this);
     }
 
     #endregion
@@ -76,8 +185,12 @@ public class ChangeColorIfNearby : MonoBehaviour
     private Camera _camera;
     private MeshRenderer _meshRenderer;
     private TextMeshPro _textMeshPro;
+    private LineRenderer _lineRenderer;
     private float _distance;
     private Quaternion _rotation;
+    
+    [Header("Mesure entre objets")]
+    [SerializeField] private Transform _targetObject;
 
     [Header("Materials")]
     [SerializeField] private Material _defaultMaterial;
@@ -93,6 +206,11 @@ public class ChangeColorIfNearby : MonoBehaviour
     [SerializeField] private float _speedSizeChanged = 10f;
     [SerializeField] private float _lerp = 0.2f;
     [SerializeField] private float _rotationSpeed = 60f;
+    
+    [Header("Linear Text")]
+    [SerializeField] private TextMeshPro _textMeshProLinear;
+    
+    private static List<ChangeColorIfNearby> _allPoints = new List<ChangeColorIfNearby>();
     
     
     
