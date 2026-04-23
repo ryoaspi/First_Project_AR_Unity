@@ -33,17 +33,20 @@ public class ImageDetector : MonoBehaviour
             string imageName = image.referenceImage.name;
             Vector3 spawnPosition = image.transform.position;
             Debug.Log("Image Add: " + image.referenceImage.name);
-
+            Shader shader = Shader.Find("Universal Render Pipeline/Lit");
+            Renderer Renderer = GetComponent<Renderer>();
             switch (imageName)
             {
                 case "one":
                     GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    Renderer.material = new Material(shader);
                     cube.transform.SetParent(image.transform,false);
                     cube.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
                     Debug.Log("Instantiate Cube: " + cube.name);
                     break;
                 case "Unity Logo":
                     GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    Renderer.material = new Material(shader);
                     sphere.transform.transform.SetParent(image.transform,false);
                     sphere.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
                     Debug.Log("Instantiate Sphere: " + sphere.name);
@@ -51,6 +54,7 @@ public class ImageDetector : MonoBehaviour
                 
                 case "Rafflesia":
                     GameObject capsule = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+                    Renderer.material = new Material(shader);
                     capsule.transform.transform.SetParent(image.transform,false);
                     capsule.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
                     capsule.transform.localRotation = Quaternion.Euler(90f, 0, 0);
